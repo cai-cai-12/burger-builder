@@ -1,5 +1,9 @@
 import React from 'react';
 
+// a special higher order component
+// we can inject or make them available (inject these special props in any component)
+// import {withRouter} from 'react-router-dom';
+
 import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
@@ -27,3 +31,6 @@ const burger = (props) => {
 };
 
 export default burger;
+// in the router we have match location & history
+// and match will refer to the nearest match (to the nearest route which was matched in the past)
+// --> in this case: the route which matched the BurgerBuilder.
