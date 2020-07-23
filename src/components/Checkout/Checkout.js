@@ -19,7 +19,11 @@ class Checkout extends Component {
     // there is no way we can route to it without it being mounted again because it's not nested in some other page or anything like that.
     componentDidMount() {
         const query = new URLSearchParams(this.props.location.search);
-        console.log(query);
+        const ingredients = {};
+        for (let param of query.entries()) {
+            ingredients[param[0]] = +param[1];
+        }
+        this.setState({ingredients: ingredients});
     }
 
     checkoutCancelledHandler = () => {
