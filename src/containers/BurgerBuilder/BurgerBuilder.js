@@ -1,4 +1,8 @@
 import React, {Component} from 'react';
+// let connect the BurgerBuilder to our 'store'
+import {connect} from 'react-redux';
+import * as actionTypes from '../../store/actions';
+
 import Aux from '../../hoc/Aux/Aux';
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -28,15 +32,16 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
+        console.log(this.props);
         // The BurgerBuilder is part of the routable area of our projsct
         // So we have access to the match location & history props
-        axios.get('https://react-my-burger-fa20a.firebaseio.com/ingredients.json')
-            .then(Response => {
-                this.setState({ingredients: Response.data});
-            })
-            .catch(error => {
-                this.setState({error: true});
-            });
+        // axios.get('https://react-my-burger-fa20a.firebaseio.com/ingredients.json')
+        //     .then(Response => {
+        //         this.setState({ingredients: Response.data});
+        //     })
+        //     .catch(error => {
+        //         this.setState({error: true});
+        //     });
     }
 
     updatePurchaseState = (ingredients) => {
@@ -148,5 +153,20 @@ class BurgerBuilder extends Component {
         );
     }
 }
+
+// holds a func which receives the 'state' automatically
+// and which returns a JS obj where we define which property should hold which slice of the state.
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients
+    };
+};
+
+// receives a func or holds a func which receives the 'dispatch' func as an argument
+// and then returns the obj with props func mapping 
+const mapDispatchToProps = 
+
+
+// will hold an anonymous func where execute dispatch() & pass a JS obj
 
 export default withErrorHandler(BurgerBuilder, axios);
