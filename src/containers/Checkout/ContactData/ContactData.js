@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
-import axios from '../../../axios-orders';
+import {connect} from 'react-redux';
 
 import Button from '../../../components/UI/Button/Button';
 import classes from './ContactData.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
+import axios from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
@@ -119,7 +120,7 @@ class ContactData extends Component {
         // for storing data, we should use a post request and therefore we use the post() method on that instance
         // now we also need to send some data and that data should be our order for the given burger config.
         const order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             // the totalPrice is only calculated & stored in the BurgerBuilder
             // so we have to pass the totalPrice along with the ingredients from the BurgerBuilder to the Checkout component.
             price: this.props.price,
@@ -155,17 +156,27 @@ class ContactData extends Component {
         if (!rules) {
             return true;
         }
-
+        
         if (rules.required) {
             isValid = value.trim() !== '' && isValid;
         }
 
         if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
+            isValid = value.length >= rules.minLength && isValid
         }
 
         if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
+            isValid = value.length <= rules.maxLength && isValid
+        }
+
+        if (rules.isEmail) {
+            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+            isValid = pattern.test(value) && isValid
+        }
+
+        if (rules.isNumeric) {
+            const pattern = /^\d+$/;
+            isValid = pattern.test(value) && isValid
         }
 
         return isValid;
@@ -235,4 +246,11 @@ class ContactData extends Component {
     }
 }
 
-export default ContactData;
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients,
+        price: state.totalPrice
+    }
+};
+
+export default connect(mapStateToProps)(ContactData);
