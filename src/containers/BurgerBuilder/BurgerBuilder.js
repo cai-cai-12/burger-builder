@@ -11,7 +11,7 @@ import Spinner from '../../components/UI/Spinner/Spinner';
 // withErrorHandler with a lowercase because we're not going to use it in JSX
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
-import * as actionTypes from '../../store/actions';
+import * as burgerBuilderActions from '../../store/actions/index';
 
 class BurgerBuilder extends Component {
     state = {
@@ -157,8 +157,8 @@ const mapDispatchToProps = dispatch => {
         // will hold an anonymous func where execute dispatch & pass a JS obj
         // have a look at the reducer and remember, we used the 'ingedientName' and access it on the action
         // so we need to pass the 'ingedientName' along with the type
-        onIngredientAdded: (ingName) => dispatch({type: actionTypes.ADD_INGREDIENT, ingredientName: ingName}),
-        onIngredientRemoved: (ingName) => dispatch({type: actionTypes.REMOVE_INGREDIENT, ingredientName: ingName})
+        onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
+        onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
     };
 };
 

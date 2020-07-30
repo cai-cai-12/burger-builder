@@ -1,4 +1,6 @@
-import * as actionTypes from './actions';
+// hold code relevant to building the burger only
+
+import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     ingredients: {
