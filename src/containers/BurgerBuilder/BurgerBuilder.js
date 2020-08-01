@@ -21,13 +21,11 @@ class BurgerBuilder extends Component {
         purchasing: false,
         // When loading = true -> show the spinner, when loading = false -> show the OrderSummary
         loading: false,
-        error: false,
+        // error: false,
     }
 
     componentDidMount() {
         console.log(this.props);
-        // The BurgerBuilder is part of the routable area of our projsct
-        // So we have access to the match location & history props
         // axios.get('https://react-my-burger-fa20a.firebaseio.com/ingredients.json')
         //     .then(Response => {
         //         this.setState({ingredients: Response.data});
@@ -35,16 +33,17 @@ class BurgerBuilder extends Component {
         //     .catch(error => {
         //         this.setState({error: true});
         //     });
+        this.props.onInitIngredients();
     }
 
-    updatePurchaseState ( ingredients ) {
-        const sum = Object.keys( ingredients )
+    updatePurchaseState (ingredients) {
+        const sum = Object.keys(ingredients )
             .map( igKey => {
                 return ingredients[igKey];
             } )
-            .reduce( ( sum, el ) => {
+            .reduce( (sum, el) => {
                 return sum + el;
-            }, 0 );
+            }, 0);
         return sum > 0;
     }
 
@@ -104,7 +103,7 @@ class BurgerBuilder extends Component {
 
         // add a check if this.state.loading
         let orderSummary = null;
-        let burger = this.state.error ? <p>Ingredients can't loaded!</p> : <Spinner />;
+        let burger = this.props.error ? <p>Ingredients can't loaded!</p> : <Spinner />;
 
         if (this.props.ings) {
             burger = (
@@ -145,7 +144,8 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
     return {
         ings: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        error: state.error,
     };
 };
 
@@ -158,7 +158,8 @@ const mapDispatchToProps = dispatch => {
         // have a look at the reducer and remember, we used the 'ingedientName' and access it on the action
         // so we need to pass the 'ingedientName' along with the type
         onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-        onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
+        onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients()),
     };
 };
 

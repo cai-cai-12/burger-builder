@@ -3,13 +3,9 @@
 import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
-    ingredients: {
-        salad: 0,
-        bacon: 0,
-        cheese: 0,
-        meat: 0
-    },
-    totalPrice: 4
+    ingredients: null,
+    totalPrice: 4,
+    error: false,
 };
 
 const INGREDIENT_PRICES = {
@@ -49,13 +45,31 @@ const reducer = (state = initialState, action) => {
                 },
                 totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
             };
+        case actionTypes.SET_INGREDIENTS:
+            return {
+                ...state,
+                ingredients: {
+                    // since we loaded from firebase and we can't order the props manually
+                    // (the salad is ordered at the bottom alphabetically...)
+                    // -> simply choose a solution where to hardcode our ingredients
+                    salad: action.ingredients.salad,
+                    bacon: action.ingredients.bacon,
+                    cheese: action.ingredients.cheese,
+                    meat: action.ingredients.meat,
+                },
+                // one important thing, when we call SET_INGREDIENTS here, we will set the error to false to reset it
+                error: false
+            };
+        case actionTypes.FETCH_INGREDIENTS_FAILED:
+            return {
+                ...state,
+                error: true
+            };
         default:
             return state;
     }
 };
 
 export default reducer;
-
-
 
 

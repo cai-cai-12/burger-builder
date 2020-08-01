@@ -101,7 +101,7 @@ class ContactData extends Component {
         event.preventDefault();
 
         // we need access to the ingredients & contact data to make this request though
-        // we set up this props in file Checkout.js (line 56), so now we can access the ingredients on props
+        // we set up this props in file Checkout.js, so now we can access the ingredients on props
     
         // call this.setState and set loading to true, 
         // because we're loading the request is about to get sent.
@@ -116,7 +116,7 @@ class ContactData extends Component {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
 
-        // use axios instance to send the request to our backend
+        // use axios instance to send the request to our BE
         // for storing data, we should use a post request and therefore we use the post() method on that instance
         // now we also need to send some data and that data should be our order for the given burger config.
         const order = {
@@ -126,25 +126,25 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData,
         }
-        axios.post('/orders.json', order)
-            .then(Response => {
-                // want to stop loading no matter what the response is 
-                // because the request is done even if it failed.
+        // axios.post('/orders.json', order)
+        //     .then(Response => {
+        //         // want to stop loading no matter what the response is 
+        //         // because the request is done even if it failed.
                 
-                // set the loading to false again -> go back to the 'order'
-                this.setState({loading: false});
-                this.props.history.push('/');
+        //         // set the loading to false again -> go back to the 'order'
+        //         this.setState({loading: false});
+        //         this.props.history.push('/');
 
-            })
-            .catch(error => {
-                // want to set loading to false if we have an err
-                // because even if an err occurred, we want to stop loading
-                // and we don't want to show the spinner anymore 
-                // because our UI would be stuck in this case and the user would think it's still loading
-                // => close the Modal 
-                // because the modal only shown if state.purchasing props = true -> so in both cases, we'll set purchasing = false
-                this.setState({loading: false})
-            });
+        //     })
+        //     .catch(error => {
+        //         // want to set loading to false if we have an err
+        //         // because even if an err occurred, we want to stop loading
+        //         // and we don't want to show the spinner anymore 
+        //         // because our UI would be stuck in this case and the user would think it's still loading
+        //         // => close the Modal 
+        //         // because the modal only shown if state.purchasing props = true -> so in both cases, we'll set purchasing = false
+        //         this.setState({loading: false})
+        //     });
     }// turn off the ORDER btn if the form is invalid
 
     // the goal is that whenever we change the values -> check if it's valid or not
