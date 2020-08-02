@@ -23,16 +23,70 @@ export const purchaseBurgerFail = (error) => {
 
 // The async 1 - this is the action we dispatched from the container we click that order btn
 // Here we do expect to get some oderData (like the user data, addIndredient...)
-export const purchaseBurgerStart = (orderData) => {
+// But this has async code and therefore doesn't return an action -> so we'll add a new action creator (purchaseBurgerStart)
+export const purchaseBurger = (orderData) => {
     return dispatch => {
-        axios.push('/orders.json', orderData)
+        dispatch(purchaseBurgerStart());
+        axios.post('/orders.json', orderData)
             .then(Response => {
                 console.log(Response.data);
-                dispatch(purchaseBurgerSuccess(Response.data, orderData));
+                dispatch(purchaseBurgerSuccess(Response.data.name, orderData));
             })
-            .catch(eror => {
+            .catch(error => {
                 dispatch(purchaseBurgerFail(error));
             });
     };
 };
 
+export const purchaseBurgerStart = () => {
+    return {
+        type: actionTypes.PURCHASE_BURGER_START,
+    };
+};
+
+export const purchaseInit = () => {
+    return {
+        type: actionTypes.PURCHASE_INIT,
+    };
+};
+
+// 17. Fetching Orders (via Redux)
+export const fetchOrdersSuccess = (orders) => {
+    return {
+        type: actionTypes.FETCH_ORDERS_SUCCESS,
+        orders: orders,
+    };
+};
+
+export const fetchOrdersFail = (error) => {
+    return {
+        type: actionTypes.FETCH_ORDERS_FAIL,
+        error: error,
+    };
+};
+
+export const fetchOrdersStart = () => {
+    return {
+        type: actionTypes.FETCH_ORDERS_START,
+    };
+};
+
+// as for purchasing, we need the const where we run our async code
+export const fetchOrders = () => {
+    return dispatch => {
+        axios.get('/orders.json')
+            .then(Response => {
+                const fetchedOrder = [];
+                for (let key in Response.data) {
+                    fetchedOrder.push({
+                        ...Response.data[key],
+                        id: key,
+                    });
+                }
+                dispatch(fetchOrdersSuccess(fetchedOrder));
+            })
+            .catch(error => {
+                dispatch(fetchOrdersFail(error));
+            });
+    };
+};

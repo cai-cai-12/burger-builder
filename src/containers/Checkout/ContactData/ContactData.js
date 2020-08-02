@@ -6,6 +6,13 @@ import classes from './ContactData.css';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import axios from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
+import * as actions from '../../../store/actions/index';
+
+// it's not related to redux but we want to make sure that we do use it here too
+// just as we use it in the BurgerBuilder at the bottom, it's getting wrapped by the connect middleware
+// and we want to have this error dropdown here too
+// So in the ContactData at the very bottom where we export everything, we'll wrap ContactData with one additional
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 
 class ContactData extends Component {
     state = {
@@ -93,39 +100,27 @@ class ContactData extends Component {
             },
         },
         formIsValid: false,
-        loading: false,
+        // loading: false, -> instead in mapStateToProps()
     }
 
     orderHandler = (event) => {
         // preventDefault() - because we don't want to send the request automatically that would reload my page
         event.preventDefault();
 
-        // we need access to the ingredients & contact data to make this request though
-        // we set up this props in file Checkout.js, so now we can access the ingredients on props
-    
-        // call this.setState and set loading to true, 
-        // because we're loading the request is about to get sent.
-        // Once the "Response => console.log(Response)" though
-        this.setState({loading: true});
-
         // for <form onSubmit={this.orderHandler}>
-        // to get the data from state.orderForm obj and don't care about the elementType && elementConfig
+        // to get the data from state.orderForm obj and don't care about the elementType & elementConfig
         // just want to get the name && value directly mapped to each other
         const formData = {};
         for (let formElementIdentifier in this.state.orderForm) {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
         }
 
-        // use axios instance to send the request to our BE
-        // for storing data, we should use a post request and therefore we use the post() method on that instance
-        // now we also need to send some data and that data should be our order for the given burger config.
         const order = {
             ingredients: this.props.ings,
-            // the totalPrice is only calculated & stored in the BurgerBuilder
-            // so we have to pass the totalPrice along with the ingredients from the BurgerBuilder to the Checkout component.
             price: this.props.price,
             orderData: formData,
         }
+
         // axios.post('/orders.json', order)
         //     .then(Response => {
         //         // want to stop loading no matter what the response is 
@@ -145,8 +140,11 @@ class ContactData extends Component {
         //         // because the modal only shown if state.purchasing props = true -> so in both cases, we'll set purchasing = false
         //         this.setState({loading: false})
         //     });
-    }// turn off the ORDER btn if the form is invalid
 
+        this.props.onOrderBurger(order);
+    }
+    
+    // turn off the ORDER btn if the form is invalid
     // the goal is that whenever we change the values -> check if it's valid or not
     // return true/false before excute inputChangedHandler()
     checkValidity = (value, rules) => {
@@ -234,7 +232,7 @@ class ContactData extends Component {
                 <Button btnType='Success' disabled={!this.state.formIsValid}>ORDER</Button>
             </form>
         );
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner />;
         }
         return (
@@ -248,9 +246,17 @@ class ContactData extends Component {
 
 const mapStateToProps = state => {
     return {
-        ings: state.ingredients,
-        price: state.totalPrice
+        ings: state.burgerBuilder.ingredients,
+        price: state.burgerBuilder.totalPrice,
+        loading: state.order.loading,
     }
 };
 
-export default connect(mapStateToProps)(ContactData);
+// the main thing is that we want to connect my container here to the new actions we created
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));
