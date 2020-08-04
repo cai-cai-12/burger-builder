@@ -141,7 +141,7 @@ class ContactData extends Component {
         //         this.setState({loading: false})
         //     });
 
-        this.props.onOrderBurger(order);
+        this.props.onOrderBurger(order, this.props.token);
     }
     
     // turn off the ORDER btn if the form is invalid
@@ -249,13 +249,14 @@ const mapStateToProps = state => {
         ings: state.burgerBuilder.ingredients,
         price: state.burgerBuilder.totalPrice,
         loading: state.order.loading,
+        token: state.auth.token,
     }
 };
 
 // the main thing is that we want to connect my container here to the new actions we created
 const mapDispatchToProps = dispatch => {
     return {
-        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData)),
+        onOrderBurger: (orderData, token) => dispatch(actions.purchaseBurger(orderData, token)),
     };
 };
 

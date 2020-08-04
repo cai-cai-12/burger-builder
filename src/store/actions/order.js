@@ -24,10 +24,10 @@ export const purchaseBurgerFail = (error) => {
 // The async 1 - this is the action we dispatched from the container we click that order btn
 // Here we do expect to get some oderData (like the user data, addIndredient...)
 // But this has async code and therefore doesn't return an action -> so we'll add a new action creator (purchaseBurgerStart)
-export const purchaseBurger = (orderData) => {
+export const purchaseBurger = (orderData, token) => {
     return dispatch => {
         dispatch(purchaseBurgerStart());
-        axios.post('/orders.json', orderData)
+        axios.post('/orders.json?auth=' + token, orderData)
             .then(Response => {
                 console.log(Response.data);
                 dispatch(purchaseBurgerSuccess(Response.data.name, orderData));
@@ -72,9 +72,9 @@ export const fetchOrdersStart = () => {
 };
 
 // as for purchasing, we need the const where we run our async code
-export const fetchOrders = () => {
+export const fetchOrders = (token) => {
     return dispatch => {
-        axios.get('/orders.json')
+        axios.get('/orders.json?auth=' + token)
             .then(Response => {
                 const fetchedOrder = [];
                 for (let key in Response.data) {

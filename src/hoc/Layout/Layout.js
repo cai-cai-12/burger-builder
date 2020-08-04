@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import { connect } from 'react-redux';
+
 import Aux from '../Aux/Aux';
 import classes from './Layout.css';
 import Toolbar from '../../components/Navigation/Toolbar/Toolbar';
@@ -10,7 +12,7 @@ import SideDrawer from '../../components/Navigation/SideDrawer/SideDrawer';
 
 // In the end, we also need to create a connection from Tollbar to sideDrawer
 // and we have that connection in Layout component already
-// It makes more sense to turn the Layout component into a class component where we can implement the method so that we can listen toi both the sideDrawer closing itself by clicking on the Backdrop
+// It makes more sense to turn the Layout component into a class component where we can implement the method so that we can listen to both the sideDrawer closing itself by clicking on the Backdrop
 // ori.
 // const layout = (props) => (
 //     <Aux>
@@ -42,8 +44,13 @@ class Layout extends Component {
     render () {
         return (
             <Aux>
-                <Toolbar drawerToogleClicked={this.sideDrawerToogleHandler} />
-                <SideDrawer open={this.state.showSideDrawer} closed={this.sideDrawerClosedHandler} />
+                <Toolbar 
+                    isAuth={this.props.isAuthenticated}
+                    drawerToogleClicked={this.sideDrawerToogleHandler} />
+                <SideDrawer 
+                    isAuth={this.props.isAuthenticated}
+                    open={this.state.showSideDrawer} 
+                    closed={this.sideDrawerClosedHandler} />
                 <main className={classes.Content}>
                     {/* and props can now be accessed with this.props */}
                     {this.props.children}
@@ -53,4 +60,11 @@ class Layout extends Component {
     }
 }
 
-export default Layout;
+const mapStateToProps = state => {
+    return {
+        // do map some props to slices of our state
+        isAuthenticated: state.auth.token !== null,
+    };
+};
+
+export default connect(mapStateToProps)(Layout);

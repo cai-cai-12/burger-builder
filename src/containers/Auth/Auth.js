@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Button from '../../components/UI/Button/Button';
 import Input from '../../components/UI/Input/Input';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
 
+//Let's also make sure that if we enter something invalid -> show a visual err feedback
+import Spinner from '../../components/UI/Spinner/Spinner';
 
 class Auth extends Component {
     // we'll manage our form through the state of this auth container (local state), not through redux
@@ -110,7 +113,7 @@ class Auth extends Component {
             });
         }
 
-        const form = formElementsArray.map(formElement => (
+        let form = formElementsArray.map(formElement => (
             <Input 
                 key={formElement.id} 
                 elementType={formElement.config.elementType}
@@ -122,8 +125,29 @@ class Auth extends Component {
                 touched={formElement.config.touched}/>
         ));
 
+        // we'll render the Spinner either the form or if we're loading
+        // check after the form was created if this props loading = true
+        if (this.props.loading) {
+            form = <Spinner />
+        }
+
+        let errorMsg = null;
+        if (this.props.error) {
+            errorMsg = (
+                <p>{this.props.error.message}</p>
+            );
+        }
+
+        // want to redirect away from the authentication form
+        let authRedirect = null;
+        if (this.props.isAuthenticated) {
+            authRedirect = <Redirect to='/' />
+        }
+
         return (
             <div className={classes.Auth}>
+                {authRedirect}
+                {errorMsg}
                 <form onSubmit={this.submitHandler}>
                     {form}
                     <Button btnType='Success'>SUBMIT</Button>
@@ -136,6 +160,18 @@ class Auth extends Component {
     }
 };
 
+// Now we want to display the Spinner as long as we're loading
+// and for that we need to know if we're loading & storing that info in our auth state
+// -> need to get a piece of that state in our auth container
+const mapStateToProps = state => {
+    return {
+        loading: state.auth.loading,
+        error: state.auth.error,
+        // want to redirect away from the authentication form
+        isAuthenticated: state.auth.token !== null,
+    };
+};
+
 const mapDispatchToProps = dispatch => {
     return {
         // we can execute onAuth on our props in this container
@@ -144,4 +180,4 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-export default connect(null, mapDispatchToProps)(Auth);
+export default connect(mapStateToProps, mapDispatchToProps)(Auth);

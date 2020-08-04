@@ -22,6 +22,20 @@ export const authFail = (error) => {
     };
 };
 
+export const logout = () => {
+    return {
+        type: actionTypes.AUTH_LOGOUT,
+    };
+};
+
+export const checkAuthTimeout = (expirationTime) => {
+    return dispatch => {
+        setTimeout(() => {
+            dispatch(logout());
+        }, expirationTime * 1000);
+    };
+};
+
 // this action type will be the one holding a aynsc code doing the authentication
 export const auth = (email, password, isSignup) => {
     return dispatch => {
@@ -41,10 +55,10 @@ export const auth = (email, password, isSignup) => {
             .then(Response => {
                 console.log(Response);
                 dispatch(authSuccess(Response.data.idToken, Response.data.localId));
+                dispatch(checkAuthTimeout(Response.data.expiresIn));
             })
-            .catch(error => {
-                console.log(error);
-                dispatch(authFail(error));
+            .catch(err => {
+                dispatch(authFail(err.Response.data.error));
             });
     };
 };
