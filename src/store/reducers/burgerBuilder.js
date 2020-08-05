@@ -8,6 +8,8 @@ const initialState = {
     ingredients: null,
     totalPrice: 4,
     error: false,
+    // set this.props.building = true whenever we add/remove an ingredient
+    building: false,
 };
 
 const INGREDIENT_PRICES = {
@@ -42,7 +44,8 @@ const reducer = (state = initialState, action) => {
             const updatedIngredients = updateObject(state.ingredients, updatedIngredient);
             const updatedState = {
                 ingredients: updatedIngredients,
-                totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+                totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+                building: true,
             };
             return updateObject(state, updatedState);
 
@@ -51,7 +54,8 @@ const reducer = (state = initialState, action) => {
             const updatedIngs = (state.ingredients, updatedIng);
             const updatedSt = {
                 ingredients: updatedIngs,
-                totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+                totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
+                building: true,
             };
             return updateObject(state, updatedSt);
 
@@ -81,6 +85,8 @@ const reducer = (state = initialState, action) => {
                 },
                 totalPrice: 4,
                 error: false,
+                // = false, because we just reloaded the page (starting from scratch, not building yet)
+                building: false,
             });
 
         case actionTypes.FETCH_INGREDIENTS_FAILED:
