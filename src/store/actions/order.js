@@ -72,9 +72,11 @@ export const fetchOrdersStart = () => {
 };
 
 // as for purchasing, we need the const where we run our async code
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
-        axios.get('/orders.json?auth=' + token)
+        dispatch(fetchOrdersStart());
+        const queryParams = '?auth=' + token + '&orderBy="userId"&equalTo"' + userId + '"';
+        axios.get('/orders.json' + queryParams)
             .then(Response => {
                 const fetchedOrder = [];
                 for (let key in Response.data) {

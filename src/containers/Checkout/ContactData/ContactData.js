@@ -119,6 +119,7 @@ class ContactData extends Component {
             ingredients: this.props.ings,
             price: this.props.price,
             orderData: formData,
+            userId: this.props.userId,
         }
 
         // axios.post('/orders.json', order)
@@ -250,6 +251,8 @@ const mapStateToProps = state => {
         price: state.burgerBuilder.totalPrice,
         loading: state.order.loading,
         token: state.auth.token,
+        // 20. Displaying User Specific Orders
+        userId: state.auth.userId,
     }
 };
 
