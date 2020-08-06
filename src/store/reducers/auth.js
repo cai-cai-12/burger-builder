@@ -1,7 +1,7 @@
 // storing the Token
 // to handle these auth actions & auth state
 import * as actionTypes from '../../store/actions/actionTypes';
-import { updateObject } from '../utility';
+import { updateObject } from '../../shared/utility';
 
 const initialState = {
     token: null,

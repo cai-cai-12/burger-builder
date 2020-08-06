@@ -6,9 +6,9 @@ import Button from '../../UI/Button/Button';
 
 class OrderSummary extends Component {
     // Implement method to see when this actually updates
-    componentDidUpdate() {
-        console.log('[OrderSummary] WillUpdate');
-    }
+    // componentDidUpdate() {
+    //     console.log('[OrderSummary] WillUpdate');
+    // }
     
     render () {
         const ingredientSummary = Object.keys(this.props.ingredients)

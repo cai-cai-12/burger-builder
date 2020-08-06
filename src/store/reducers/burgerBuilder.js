@@ -2,7 +2,7 @@
 import * as actionTypes from '../actions/actionTypes';
 
 // now we can "updateObject" whenever we have code like this, where we distribute some props.
-import {updateObject} from '../utility';
+import { updateObject } from '../../shared/utility';
 
 const initialState = {
     ingredients: null,

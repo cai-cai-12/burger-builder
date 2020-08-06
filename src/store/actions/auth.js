@@ -56,7 +56,7 @@ export const auth = (email, password, isSignup) => {
 
         axios.post(url, authData)
             .then(Response => {
-                console.log(Response);
+                // console.log(Response);
                 // 16. Persistent Auth State with localStorage
                 const expirationDate = new Date(new Date().getTime() + Response.data.expiresIn * 1000);
                 localStorage.setItem('token', Response.data.idToken);
