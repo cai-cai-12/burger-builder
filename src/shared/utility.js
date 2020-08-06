@@ -5,7 +5,6 @@ export const updateObject = (oldObject, updatedProperties) => {
     };
 };
 
-
     // turn off the ORDER btn if the form is invalid
     // the goal is that whenever we change the values -> check if it's valid or not
     // return true/false before excute inputChangedHandler()
@@ -13,28 +12,28 @@ export const checkValidity = (value, rules) => {
     let isValid = true;
     // we check on rule after the other
     // that means only the last rule has to be satisfied to turn isValid = true
-    if ( !rules ) {
+    if (!rules) {
         return true;
     }
 
-    if ( rules.required ) {
+    if (rules.required) {
         isValid = value.trim() !== '' && isValid;
     }
 
-    if ( rules.minLength ) {
+    if (rules.minLength) {
         isValid = value.length >= rules.minLength && isValid
     }
 
-    if ( rules.maxLength ) {
+    if (rules.maxLength) {
         isValid = value.length <= rules.maxLength && isValid
     }
 
-    if ( rules.isEmail ) {
+    if (rules.isEmail) {
         const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
         isValid = pattern.test( value ) && isValid
     }
 
-    if ( rules.isNumeric ) {
+    if (rules.isNumeric) {
         const pattern = /^\d+$/;
         isValid = pattern.test( value ) && isValid
     }
